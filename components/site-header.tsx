@@ -1,8 +1,24 @@
+"use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function SiteHeader() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-background/90 backdrop-blur-sm">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-line bg-background/90 backdrop-blur-sm"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
       <nav
         className="grid grid-cols-3 items-center px-5 py-4 sm:px-8"
         aria-label="Primary"
