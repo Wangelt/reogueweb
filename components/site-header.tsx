@@ -16,7 +16,7 @@ export function SiteHeader() {
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
           ? "border-b border-line bg-background/90 backdrop-blur-sm"
-          : "border-b border-transparent bg-transparent"
+          : "bg-transparent"
       }`}
     >
       <nav
