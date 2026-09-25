@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-background/90 backdrop-blur-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-line bg-background/90 backdrop-blur-sm">
       <nav
         className="grid grid-cols-3 items-center px-5 py-4 sm:px-8"
         aria-label="Primary"
