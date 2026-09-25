@@ -7,14 +7,19 @@ const HERO_SRC =
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease } },
+};
+
 export function HomeHero() {
   return (
     <section className="relative isolate h-[62vh] min-h-[22rem] overflow-hidden sm:h-[70vh]">
       <motion.div
         className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease }}
+        initial={{ opacity: 0, scale: 1.08 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.4, ease, delay: 0.3 }}
       >
         <Image
           src={HERO_SRC}
@@ -30,24 +35,25 @@ export function HomeHero() {
         className="hero-grain pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-multiply"
         aria-hidden
       />
-      <div className="absolute inset-x-0 bottom-0 px-5 pb-8 sm:px-8 sm:pb-12">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.25, delayChildren: 0.4 } } }}
+        className="absolute inset-x-0 bottom-0 px-5 pb-8 sm:px-8 sm:pb-12"
+      >
         <motion.p
+          variants={fadeUp}
           className="mb-2 text-[11px] uppercase tracking-[0.28em] text-foreground/80"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.6, ease }}
         >
           New arrivals
         </motion.p>
         <motion.h1
+          variants={fadeUp}
           className="max-w-xl text-[2.35rem] font-medium leading-[0.95] tracking-[-0.03em] sm:text-6xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.85, ease }}
         >
           One of one.
         </motion.h1>
-      </div>
+      </motion.div>
     </section>
   );
 }

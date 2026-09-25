@@ -6,6 +6,11 @@ import { homeProducts } from "@/lib/catalog/home-products";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease } },
+};
+
 export default function Home() {
   return (
     <motion.main
@@ -18,10 +23,10 @@ export default function Home() {
       <ProductEdit products={homeProducts} />
       <motion.p
         className="mx-auto max-w-md border-t border-line px-5 py-14 text-center text-[15px] leading-relaxed tracking-wide text-mute sm:px-8"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, ease }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+        variants={fadeUp}
       >
         Curated pre-loved clothing. Inspected, graded, and listed as one of one.
       </motion.p>
