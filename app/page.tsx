@@ -23,7 +23,7 @@ export default function Home() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease }}
       >
-        Curated pre-lived clothing. Inspected, graded, and listed as one of one.
+        Curated pre-loved clothing. Inspected, graded, and listed as one of one.
       </motion.p>
     </motion.main>
   );
