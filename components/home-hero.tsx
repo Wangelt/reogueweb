@@ -14,7 +14,7 @@ const fadeUp = {
 
 export function HomeHero() {
   return (
-    <section className="relative isolate h-screen min-h-[38rem] overflow-hidden">
+    <section className="relative isolate -mt-[50px] h-screen min-h-[38rem] overflow-hidden">
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0, scale: 1.08 }}
