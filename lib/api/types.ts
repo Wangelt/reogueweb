@@ -230,7 +230,10 @@ export interface DashboardStats {
   totalRevenue: number;
   totalOrders: number;
   totalUsers: number;
+  totalCustomers: number;
   totalProducts: number;
+  pendingOrders: number;
+  lowStockProducts: number;
   recentOrders: Order[];
 }
 
