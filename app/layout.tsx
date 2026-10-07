@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { Familjen_Grotesk } from "next/font/google";
+import { cookies } from "next/headers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Providers } from "@/components/providers";
+import { usersApi } from "@/lib/api/users";
+import { ACCESS_TOKEN_COOKIE } from "@/lib/auth/cookies";
+import type { User } from "@/lib/api/types";
 import "./globals.css";
 
 const sans = Familjen_Grotesk({
@@ -51,13 +56,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const cookieStore = await cookies();
+  const hasToken = Boolean(cookieStore.get(ACCESS_TOKEN_COOKIE)?.value);
+
+  let initialUser: User | null = null;
+  if (hasToken) {
+    try {
+      initialUser = await usersApi.getMe();
+    } catch {
+      // token invalid or expired — middleware handles redirect
+    }
+  }
+
   return (
     <html lang="en-IN" className={`${sans.variable} antialiased`}>
       <body className="flex min-h-screen flex-col font-sans">
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <Providers initialUser={initialUser}>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </Providers>
       </body>
     </html>
   );

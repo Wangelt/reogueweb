@@ -1,9 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/components/providers";
+import { useCart } from "@/components/providers";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useAuth();
+  const { count } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -29,18 +33,38 @@ export function SiteHeader() {
         >
           ReVogue
         </Link>
-        <a
-          href="#edit"
+
+        <Link
+          href="/products"
           className="justify-self-center text-[11px] uppercase tracking-[0.28em] text-mute transition-colors hover:text-foreground"
         >
           Shop
-        </a>
-        <p
-          className="justify-self-end text-[11px] uppercase tracking-[0.28em] text-mute"
-          aria-label="Bag, 0 items"
-        >
-          Bag 0
-        </p>
+        </Link>
+
+        <div className="justify-self-end flex items-center gap-5">
+          {user ? (
+            <Link
+              href="/account"
+              className="text-[11px] uppercase tracking-[0.28em] text-mute transition-colors hover:text-foreground"
+            >
+              Account
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="text-[11px] uppercase tracking-[0.28em] text-mute transition-colors hover:text-foreground"
+            >
+              Login
+            </Link>
+          )}
+          <Link
+            href="/cart"
+            className="text-[11px] uppercase tracking-[0.28em] text-mute transition-colors hover:text-foreground"
+            aria-label={`Bag, ${count} items`}
+          >
+            Bag {count > 0 ? count : ""}
+          </Link>
+        </div>
       </nav>
     </header>
   );
