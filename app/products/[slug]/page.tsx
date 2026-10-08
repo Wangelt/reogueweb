@@ -43,11 +43,11 @@ export default async function ProductDetailPage({
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <div className="flex flex-col gap-3">
           {product.images.length > 0 ? (
-            product.images.map((src, i) => (
-              <div key={i} className="relative aspect-[3/4] overflow-hidden bg-stone">
+            product.images.map((image, i) => (
+              <div key={image.id ?? i} className="relative aspect-[3/4] overflow-hidden bg-stone">
                 <Image
-                  src={src}
-                  alt={`${product.name} — image ${i + 1}`}
+                  src={image.url}
+                  alt={image.altText ?? `${product.name} — image ${i + 1}`}
                   fill
                   sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover"

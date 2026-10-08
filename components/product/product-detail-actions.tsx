@@ -15,6 +15,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
   const { isWishlisted, addItem: addToWishlist, removeByProductId } = useWishlist();
 
   const [cartError, setCartError] = useState("");
+  const [buyLoading, setBuyLoading] = useState(false);
   const wishlisted = isWishlisted(product.id);
 
   async function handleAddToCart() {
@@ -27,6 +28,19 @@ export function ProductDetailActions({ product }: { product: Product }) {
     }
   }
 
+  async function handleBuyNow() {
+    if (!user) { router.push(`/login?next=/products/${product.slug}`); return; }
+    setCartError("");
+    setBuyLoading(true);
+    try {
+      await addToCart(product.id, 1);
+      router.push("/checkout");
+    } catch (err) {
+      setCartError(err instanceof ApiError ? err.message : "Could not start checkout.");
+      setBuyLoading(false);
+    }
+  }
+
   async function handleToggleWishlist() {
     if (!user) { router.push(`/login?next=/products/${product.slug}`); return; }
     if (wishlisted) {
@@ -36,7 +50,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
     }
   }
 
-  if (!product.inStock || product.status !== "PUBLISHED") {
+  if (product.status !== "ACTIVE") {
     return <p className="text-sm text-mute">This item is no longer available.</p>;
   }
 
@@ -45,7 +59,10 @@ export function ProductDetailActions({ product }: { product: Product }) {
       {cartError && (
         <p className="text-sm text-red-600">{cartError}</p>
       )}
-      <Button onClick={handleAddToCart} loading={cartLoading} className="w-full">
+      <Button onClick={handleBuyNow} loading={buyLoading} className="w-full">
+        Buy Now
+      </Button>
+      <Button variant="secondary" onClick={handleAddToCart} loading={cartLoading} className="w-full">
         Add to Bag
       </Button>
       <Button variant="secondary" onClick={handleToggleWishlist} className="w-full">

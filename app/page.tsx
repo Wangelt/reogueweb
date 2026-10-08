@@ -1,35 +1,40 @@
-"use client";
-import { motion } from "framer-motion";
-import { ProductEdit } from "@/components/product-edit";
-import { HomeHero } from "@/components/home-hero";
-import { homeProducts } from "@/lib/catalog/home-products";
+import { productsApi } from "@/lib/api/products";
+import { ApiError } from "@/lib/api/errors";
+import { HomeContent } from "@/components/home-content";
+import type { HomeProduct } from "@/lib/catalog/home-products";
+import type { Product, ProductCondition } from "@/lib/api/types";
 
-const ease = [0.22, 1, 0.36, 1] as const;
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 60 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease } },
+const CONDITION_LABEL: Record<ProductCondition, string> = {
+  LIKE_NEW: "Very good",
+  EXCELLENT: "Excellent",
+  GOOD: "Good",
+  FAIR: "Fair",
 };
 
-export default function Home() {
+function toHomeProduct(p: Product): HomeProduct {
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    size: p.size,
+    condition: CONDITION_LABEL[p.condition],
+    priceInr: p.sellingPrice,
+    imageSrc: p.images[0]?.url,
+  };
+}
+
+export default async function Home() {
+  const result = await productsApi
+    .list({ limit: 20, sort: "newest" })
+    .catch((error: unknown) => {
+      if (error instanceof ApiError && error.status === 429) return null;
+      throw error;
+    });
+
   return (
-    <motion.main
-      className="flex flex-1 flex-col"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease }}
-    >
-      <HomeHero />
-      <ProductEdit products={homeProducts} />
-      <motion.p
-        className="mx-auto max-w-md border-t border-line px-5 py-14 text-center text-[15px] leading-relaxed tracking-wide text-mute sm:px-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        variants={fadeUp}
-      >
-        Curated pre-loved clothing. Inspected, graded, and listed as one of one.
-      </motion.p>
-    </motion.main>
+    <HomeContent
+      products={result?.data.map(toHomeProduct) ?? []}
+      productsRateLimited={!result}
+    />
   );
 }

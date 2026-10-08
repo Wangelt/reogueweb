@@ -60,7 +60,7 @@ export default function OrderDetailPage() {
               <Link href={`/products/${item.product.slug}`} className="shrink-0">
                 <div className="relative h-20 w-14 overflow-hidden bg-stone">
                   {item.product.images[0] && (
-                    <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover" sizes="56px" />
+                    <Image src={item.product.images[0].url} alt={item.product.images[0].altText ?? item.product.name} fill className="object-cover" sizes="56px" />
                   )}
                 </div>
               </Link>

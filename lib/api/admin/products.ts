@@ -19,7 +19,9 @@ export const adminProductsApi = {
     sku: string;
     tags?: string[];
     featured?: boolean;
-  }) => api.post<Product>("/products", data),
+  }) => api.post<Product>("/products", data).then((p) =>
+    api.patch<Product>(`/products/${p.id}/publish`),
+  ),
 
   update: (
     id: string,

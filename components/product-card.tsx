@@ -19,7 +19,7 @@ export function ProductCard({ product }: { product: HomeProduct }) {
   const { user } = useAuth();
   const { isWishlisted, addItem, removeByProductId, loading } = useWishlist();
 
-  const productId = (product as HomeProduct & { id?: string }).id;
+  const productId = product.id;
   const wishlisted = productId ? isWishlisted(productId) : false;
 
   async function toggleWishlist(e: React.MouseEvent) {
@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: HomeProduct }) {
 
   return (
     <motion.article variants={cardVariants} className="relative">
-      <Link href={`/products/${(product as HomeProduct & { slug?: string }).slug ?? ""}`}>
+      <Link href={`/products/${product.slug}`}>
         <div className="relative aspect-[3/4] overflow-hidden bg-stone">
           {product.imageSrc ? (
             <Image

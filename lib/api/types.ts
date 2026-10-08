@@ -43,7 +43,11 @@ export interface User {
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface AuthResponse {
   user: User;
+  tokens: AuthTokens;
 }
 
 export interface Address {
@@ -75,8 +79,17 @@ export interface Category {
 }
 
 export type Gender = "WOMEN" | "MEN" | "UNISEX" | "KIDS";
-export type ProductCondition = "NEW_WITH_TAGS" | "EXCELLENT" | "GOOD" | "FAIR";
-export type ProductStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED" | "SOLD";
+export type ProductCondition = "LIKE_NEW" | "EXCELLENT" | "GOOD" | "FAIR";
+export type ProductStatus = "DRAFT" | "ACTIVE" | "OUT_OF_STOCK" | "ARCHIVED";
+
+export interface ProductImage {
+  id: string;
+  url: string;
+  publicId: string;
+  altText?: string;
+  sortOrder: number;
+  isPrimary: boolean;
+}
 
 export interface Product {
   id: string;
@@ -94,12 +107,14 @@ export interface Product {
   conditionDescription?: string;
   originalPrice: number;
   sellingPrice: number;
+  discount?: number;
   sku: string;
   tags?: string[];
   featured: boolean;
+  salesCount?: number;
   status: ProductStatus;
-  images: string[];
-  inStock: boolean;
+  images: ProductImage[];
+  publishedAt?: string;
   createdAt: string;
   updatedAt: string;
 }

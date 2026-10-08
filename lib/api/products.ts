@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/client";
-import type { Product, PaginatedResponse, ProductFilters } from "@/lib/api/types";
+import type { PaginatedResponse, Product, ProductFilters } from "@/lib/api/types";
 
 export const productsApi = {
   list: (filters: ProductFilters = {}) => {
@@ -12,7 +12,7 @@ export const productsApi = {
     const qs = params.toString();
     return api.get<PaginatedResponse<Product>>(
       qs ? `/products?${qs}` : "/products",
-      { auth: false },
+      { auth: false, next: { revalidate: 60 } },
     );
   },
 

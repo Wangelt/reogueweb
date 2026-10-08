@@ -41,7 +41,7 @@ export default function CartPage() {
               <Link href={`/products/${item.product.slug}`} className="shrink-0">
                 <div className="relative h-24 w-16 overflow-hidden bg-stone">
                   {item.product.images[0] ? (
-                    <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover" sizes="64px" />
+                    <Image src={item.product.images[0].url} alt={item.product.images[0].altText ?? item.product.name} fill className="object-cover" sizes="64px" />
                   ) : null}
                 </div>
               </Link>

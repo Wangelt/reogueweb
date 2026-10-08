@@ -6,7 +6,7 @@ function formatInr(amount: number) {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);
 }
 
-export function ProductGrid({ products }: { products: Product[] }) {
+export function ProductGrid({ products = [] }: { products?: Product[] }) {
   if (products.length === 0) {
     return (
       <div className="py-16 text-center text-mute text-sm">
@@ -22,8 +22,8 @@ export function ProductGrid({ products }: { products: Product[] }) {
           <div className="relative aspect-[3/4] overflow-hidden bg-stone">
             {product.images[0] ? (
               <Image
-                src={product.images[0]}
-                alt={product.name}
+                src={product.images[0].url}
+                alt={product.images[0].altText ?? product.name}
                 fill
                 sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"

@@ -45,7 +45,9 @@ function AuthProvider({
   const login = useCallback(async (email: string, password: string) => {
     setLoading(true);
     try {
-      const { user: u } = await authApi.login(email, password);
+      const { user: u, tokens } = await authApi.login(email, password);
+      document.cookie = `rv_access=${encodeURIComponent(tokens.accessToken)}; Path=/; SameSite=Lax; Max-Age=900`;
+      document.cookie = `rv_refresh=${encodeURIComponent(tokens.refreshToken)}; Path=/; SameSite=Lax; Max-Age=604800`;
       setUser(u);
     } finally {
       setLoading(false);
@@ -63,7 +65,9 @@ function AuthProvider({
       setLoading(true);
       try {
         await authApi.register(data);
-        const { user: u } = await authApi.login(data.email, data.password);
+        const { user: u, tokens } = await authApi.login(data.email, data.password);
+        document.cookie = `rv_access=${encodeURIComponent(tokens.accessToken)}; Path=/; SameSite=Lax; Max-Age=900`;
+        document.cookie = `rv_refresh=${encodeURIComponent(tokens.refreshToken)}; Path=/; SameSite=Lax; Max-Age=604800`;
         setUser(u);
       } finally {
         setLoading(false);
@@ -77,6 +81,8 @@ function AuthProvider({
     if (match?.[1]) {
       await authApi.logout(decodeURIComponent(match[1])).catch(() => {});
     }
+    document.cookie = "rv_access=; Path=/; SameSite=Lax; Max-Age=0";
+    document.cookie = "rv_refresh=; Path=/; SameSite=Lax; Max-Age=0";
     setUser(null);
     window.location.href = "/";
   }, []);
@@ -202,8 +208,7 @@ function WishlistProvider({ children }: { children: React.ReactNode }) {
   const addItem = useCallback(async (productId: string) => {
     setLoading(true);
     try {
-      const item = await wishlistApi.addItem(productId);
-      setItems((prev) => [...prev, item]);
+      setItems(await wishlistApi.addItem(productId));
     } finally {
       setLoading(false);
     }

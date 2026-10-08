@@ -9,7 +9,7 @@ import { ApiError } from "@/lib/api/errors";
 import type { Product, Category, Gender, ProductCondition } from "@/lib/api/types";
 
 const GENDERS: Gender[] = ["WOMEN", "MEN", "UNISEX", "KIDS"];
-const CONDITIONS: ProductCondition[] = ["NEW_WITH_TAGS", "EXCELLENT", "GOOD", "FAIR"];
+const CONDITIONS: ProductCondition[] = ["LIKE_NEW", "EXCELLENT", "GOOD", "FAIR"];
 
 const COLUMNS: Column<Product>[] = [
   { key: "name", header: "Name" },
@@ -17,7 +17,6 @@ const COLUMNS: Column<Product>[] = [
   { key: "sku", header: "SKU" },
   { key: "sellingPrice", header: "Price", render: (p) => `₹${p.sellingPrice}` },
   { key: "status", header: "Status" },
-  { key: "inStock", header: "Stock", render: (p) => (p.inStock ? "In Stock" : "Out") },
 ];
 
 type FormData = {
@@ -191,8 +190,8 @@ export default function AdminProductsPage() {
     setLoading(true);
     try {
       const result = await adminProductsApi.list({ page: p, limit: 20, search: q || undefined });
-      setProducts(result.data);
-      setTotalPages(result.pagination.totalPages);
+      setProducts(result);
+      setTotalPages(result.length < 20 ? p : p + 1);
     } finally {
       setLoading(false);
     }
@@ -231,7 +230,7 @@ export default function AdminProductsPage() {
           {p.status === "DRAFT" && (
             <button onClick={() => handleStatusAction(p, "publish")} className="text-mute underline-offset-2 hover:underline">Publish</button>
           )}
-          {p.status === "PUBLISHED" && (
+          {p.status === "ACTIVE" && (
             <button onClick={() => handleStatusAction(p, "archive")} className="text-mute underline-offset-2 hover:underline">Archive</button>
           )}
           <button onClick={() => handleStatusAction(p, "delete")} className="text-red-500 underline-offset-2 hover:underline">Delete</button>

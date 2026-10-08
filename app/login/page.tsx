@@ -25,6 +25,7 @@ function LoginForm() {
       await login(email, password);
       const next = searchParams.get("next") ?? "/account";
       router.push(next);
+      router.refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Login failed. Please try again.");
     } finally {

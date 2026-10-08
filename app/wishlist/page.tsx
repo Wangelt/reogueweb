@@ -43,8 +43,8 @@ export default function WishlistPage() {
               <div className="relative aspect-[3/4] overflow-hidden bg-stone">
                 {item.product.images[0] ? (
                   <Image
-                    src={item.product.images[0]}
-                    alt={item.product.name}
+                    src={item.product.images[0].url}
+                    alt={item.product.images[0].altText ?? item.product.name}
                     fill
                     sizes="(min-width: 1024px) 25vw, 50vw"
                     className="object-cover"

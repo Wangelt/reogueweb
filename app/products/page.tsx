@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { productsApi } from "@/lib/api/products";
+import { ApiError } from "@/lib/api/errors";
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductFilters } from "@/components/product/product-filters";
 import type { ProductFilters as Filters } from "@/lib/api/types";
@@ -7,9 +8,23 @@ import type { ProductFilters as Filters } from "@/lib/api/types";
 export const metadata = { title: "Shop" };
 
 async function ProductResults({ filters }: { filters: Filters }) {
-  const result = await productsApi.list(filters);
+  const result = await productsApi.list(filters).catch((error: unknown) => {
+    if (error instanceof ApiError && error.status === 429) return null;
+    throw error;
+  });
+
+  if (!result) {
+    return (
+      <p role="alert" className="py-16 text-center text-sm text-mute">
+        The shop is receiving too many requests right now. Please wait a moment
+        and refresh the page.
+      </p>
+    );
+  }
+
   return <ProductGrid products={result.data} />;
 }
+
 
 export default async function ProductsPage({
   searchParams,
@@ -17,6 +32,9 @@ export default async function ProductsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const condition =
+    typeof sp.condition === "string" ? sp.condition : undefined;
+  const sort = typeof sp.sort === "string" ? sp.sort : undefined;
 
   const filters: Filters = {
     page: sp.page ? Number(sp.page) : 1,
@@ -24,11 +42,17 @@ export default async function ProductsPage({
     category: typeof sp.category === "string" ? sp.category : undefined,
     gender: typeof sp.gender === "string" ? sp.gender : undefined,
     size: typeof sp.size === "string" ? sp.size : undefined,
-    condition: typeof sp.condition === "string" ? sp.condition : undefined,
+    condition:
+      condition === "NEW_WITH_TAGS" ? "LIKE_NEW" : condition,
     minPrice: sp.minPrice ? Number(sp.minPrice) : undefined,
     maxPrice: sp.maxPrice ? Number(sp.maxPrice) : undefined,
     search: typeof sp.search === "string" ? sp.search : undefined,
-    sort: typeof sp.sort === "string" ? sp.sort : undefined,
+    sort:
+      sort === "price_asc"
+        ? "priceAsc"
+        : sort === "price_desc"
+          ? "priceDesc"
+          : sort,
   };
 
   return (

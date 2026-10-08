@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoutButton } from "@/components/account/logout-button";
 
 const NAV = [
   { href: "/account", label: "Profile" },
@@ -11,7 +12,7 @@ export default function AccountLayout({ children }: LayoutProps<"/">) {
     <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8">
       <h1 className="mb-8 text-[11px] font-medium uppercase tracking-[0.28em]">Account</h1>
       <div className="grid grid-cols-1 gap-10 md:grid-cols-[200px_1fr]">
-        <nav className="flex flex-row gap-5 md:flex-col">
+        <nav className="flex flex-row flex-wrap gap-5 md:flex-col">
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -21,6 +22,7 @@ export default function AccountLayout({ children }: LayoutProps<"/">) {
               {item.label}
             </Link>
           ))}
+          <LogoutButton />
         </nav>
         <div>{children}</div>
       </div>

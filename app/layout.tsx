@@ -71,7 +71,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 
   return (
     <html lang="en-IN" className={`${sans.variable} antialiased`}>
-      <body className="flex min-h-screen flex-col font-sans">
+      <body className="flex min-h-screen flex-col font-sans" suppressHydrationWarning>
         <Providers initialUser={initialUser}>
           <SiteHeader />
           {children}

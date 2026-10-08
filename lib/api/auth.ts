@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/client";
-import type { AuthTokens } from "@/lib/api/types";
+import type { AuthResponse, AuthTokens } from "@/lib/api/types";
 
 export const authApi = {
   register: (data: {
@@ -8,10 +8,10 @@ export const authApi = {
     firstName: string;
     lastName: string;
     phone?: string;
-  }) => api.post<AuthTokens>("/auth/register", data, { auth: false }),
+  }) => api.post<AuthResponse>("/auth/register", data, { auth: false }),
 
   login: (email: string, password: string) =>
-    api.post<AuthTokens>("/auth/login", { email, password }, { auth: false }),
+    api.post<AuthResponse>("/auth/login", { email, password }, { auth: false }),
 
   refresh: (refreshToken: string) =>
     api.post<AuthTokens>("/auth/refresh", { refreshToken }, { auth: false }),

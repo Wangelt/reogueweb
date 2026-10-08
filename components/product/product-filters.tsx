@@ -3,11 +3,11 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback } from "react";
 
 const GENDERS = ["WOMEN", "MEN", "UNISEX", "KIDS"];
-const CONDITIONS = ["NEW_WITH_TAGS", "EXCELLENT", "GOOD", "FAIR"];
+const CONDITIONS = ["LIKE_NEW", "EXCELLENT", "GOOD", "FAIR"];
 const SORTS = [
   { value: "newest", label: "Newest" },
-  { value: "price_asc", label: "Price: Low to High" },
-  { value: "price_desc", label: "Price: High to Low" },
+  { value: "priceAsc", label: "Price: Low to High" },
+  { value: "priceDesc", label: "Price: High to Low" },
 ];
 
 export function ProductFilters() {
@@ -29,7 +29,13 @@ export function ProductFilters() {
     [router, pathname, searchParams],
   );
 
-  const get = (key: string) => searchParams.get(key) ?? "";
+  const get = (key: string) => {
+    const value = searchParams.get(key) ?? "";
+    if (key === "condition" && value === "NEW_WITH_TAGS") return "LIKE_NEW";
+    if (key === "sort" && value === "price_asc") return "priceAsc";
+    if (key === "sort" && value === "price_desc") return "priceDesc";
+    return value;
+  };
 
   return (
     <aside className="flex flex-col gap-6 text-sm">
